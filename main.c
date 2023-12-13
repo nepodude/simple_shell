@@ -17,7 +17,7 @@ int main(void)
 
 	while (1)
 	{
-		printf("$ ");
+		printf("#cisfun$ ");
 		read = getline(&lineOfCommand, &n, stdin);
 		if (read == -1)
 		{
@@ -39,7 +39,7 @@ int main(void)
 		{
 			if (execve(args[0], args, NULL) == -1)
 			{
-				perror("failed executing");
+				printf("./shell: No such file or directory\n");
 				exit(EXIT_FAILURE);
 			}
 		}
