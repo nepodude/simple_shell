@@ -7,18 +7,30 @@
  * Return: an array of string pointers.
  */
 
-char **tokenize(char *command, char *delim)
+char **tokenizer(char *command, char *delim)
 {
 	char **argv;
 	char *token;
 	char *copy_command;
-	int i = 0;
+	char *copy_command1;
+	int i = 0, numOfTokens = 0;
+
+	copy_command1 = strdup(command);
+	if (copy_command1 == NULL)
+		exit(EXIT_FAILURE);
+	token = strtok(copy_command1, delim);
+	while(token)
+	{
+		numOfTokens++;
+		token = strtok (NULL, delim);
+	}
+
+	argv = malloc((numOfTokens + 1) * sizeof(char *));
 
 	copy_command = strdup(command);
 	if (copy_command == NULL)
 		exit(EXIT_FAILURE);
 	token = strtok(copy_command, delim);
-	 
 	while(token)
 	{
 		argv[i] = malloc((strlen(token) + 1) * sizeof(char));
@@ -28,6 +40,8 @@ char **tokenize(char *command, char *delim)
 		token = strtok(NULL, delim);
 		i++;
 	}
+	argv[i] = NULL;
 	free(copy_command);
-	return argv;
+	free(copy_command1);
+	return (argv);
 }

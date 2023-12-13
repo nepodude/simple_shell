@@ -9,7 +9,6 @@
 #include <sys/wait.h>
 #include <ctype.h>
 
-char *reading(char *command);
-void prompting(void);
+char **tokenizer(char *command, char *delim);
 
 #endif

@@ -6,47 +6,40 @@
 
 int main(void)
 {
-	char command[256];
-	char *args[20];
-	pid_t pid;
-	int status, i;
-	char *token;
+	char **args;
+	pid_t child_pid;
+	int status;
+	char *lineOfCommand = NULL;
+	ssize_t read;
+	size_t n;
 
 	while (1)
 	{
-		printf("$");
-
-		if (fgets(command, sizeof(command), stdin) == NULL)
-		{	
-			printf("\n");
-			return (0);
-		}
-
-		command[strcspn(command, "\n")] = '\0';
-		token = strtok(command, " ");
-
-		for (i = 0; i < 20 && token != NULL; i++)
-		{
-			args[i] = token;
-			token = strtok(command, " ");
-		}
+		printf("$ ");
 		
-		pid = fork();
-		if (pid < 0)
-			perror("fork error");
-		else if (pid == 0)
+		read = getline(&lineOfCommand, &n, stdin);
+		if (read == -1)
 		{
-			if (execvp(args[0], args) < 0)
+			free(lineOfCommand);
+			perror("failed to read line");
+			exit(EXIT_FAILURE);
+		}
+
+		lineOfCommand[strcspn(lineOfCommand, "\n")] = '\0';
+		args = tokenizer(lineOfCommand, " ");
+		child_pid = fork();
+
+		if (child_pid < 0)
+			perror("fork error");
+		else if (child_pid == 0)
+		{
+			if (execve(args[0], args, NULL) < 0)
 			{
-				perror(args[0]);
-				exit(EXIT_FAILURE);
+				perror("Error:");
 			}
 		}
 
-		pid = waitpid(pid, &status, 0);
-		
-		if (pid  < 0)
-			perror("waitpid error");
+		wait(&status);
 	}
 	return (0);
 }
