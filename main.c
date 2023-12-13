@@ -1,7 +1,8 @@
 #include "shell.h"
 
 /**
- * main - this will be used to get the command, execute it, show the prompt.
+ * main - this will be used to get the command using getline, tokenize it using
+ * tokenizer, fork in order to create a .
  */
 
 int main(void)
@@ -11,7 +12,7 @@ int main(void)
 	int status;
 	char *lineOfCommand = NULL;
 	ssize_t read;
-	size_t n;
+	size_t n = 0;
 
 	while (1)
 	{
@@ -21,7 +22,7 @@ int main(void)
 		if (read == -1)
 		{
 			free(lineOfCommand);
-			perror("failed to read line");
+			perror("failed to read");
 			exit(EXIT_FAILURE);
 		}
 
@@ -30,16 +31,21 @@ int main(void)
 		child_pid = fork();
 
 		if (child_pid < 0)
-			perror("fork error");
+		{
+			perror("failed to fork");
+			exit(EXIT_FAILURE);
+		}
 		else if (child_pid == 0)
 		{
-			if (execve(args[0], args, NULL) < 0)
+			if (execve(args[0], args, NULL) == -1)
 			{
-				perror("Error:");
+				perror("failed executing");
+				exit(EXIT_FAILURE);
+
 			}
 		}
-
-		wait(&status);
+		else 
+			wait(&status);
 	}
 	return (0);
 }

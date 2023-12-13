@@ -22,7 +22,7 @@ char **tokenizer(char *command, char *delim)
 	while(token)
 	{
 		numOfTokens++;
-		token = strtok (NULL, delim);
+		token = strtok(NULL, delim);
 	}
 
 	argv = malloc((numOfTokens + 1) * sizeof(char *));
@@ -35,8 +35,8 @@ char **tokenizer(char *command, char *delim)
 	{
 		argv[i] = malloc((strlen(token) + 1) * sizeof(char));
 		if (argv[i] == NULL)
-			exit(EXIT_SUCCESS);
-		argv[i] = token;
+			exit(EXIT_FAILURE);
+		strcpy(argv[i], token);
 		token = strtok(NULL, delim);
 		i++;
 	}
