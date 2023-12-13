@@ -1,7 +1,7 @@
 #include "shell.h"
 
 /**
- * tokenize - takes a string of words and returns their array with some delim.
+ * tokenizer - takes a string of words and returns their array with some delim.
  * @command: pointer to the large string.
  * @delim: pointer to the delimiter to use.
  * Return: an array of string pointers.
@@ -19,7 +19,7 @@ char **tokenizer(char *command, char *delim)
 	if (copy_command1 == NULL)
 		exit(EXIT_FAILURE);
 	token = strtok(copy_command1, delim);
-	while(token)
+	while (token)
 	{
 		numOfTokens++;
 		token = strtok(NULL, delim);
@@ -31,7 +31,7 @@ char **tokenizer(char *command, char *delim)
 	if (copy_command == NULL)
 		exit(EXIT_FAILURE);
 	token = strtok(copy_command, delim);
-	while(token)
+	while (token)
 	{
 		argv[i] = malloc((strlen(token) + 1) * sizeof(char));
 		if (argv[i] == NULL)

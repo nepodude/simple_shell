@@ -3,6 +3,7 @@
 /**
  * main - this will be used to get the command using getline, tokenize it using
  * tokenizer, fork in order to create a .
+ * Return: 0 on sucess.
  */
 
 int main(void)
@@ -17,7 +18,6 @@ int main(void)
 	while (1)
 	{
 		printf("$ ");
-		
 		read = getline(&lineOfCommand, &n, stdin);
 		if (read == -1)
 		{
@@ -41,10 +41,9 @@ int main(void)
 			{
 				perror("failed executing");
 				exit(EXIT_FAILURE);
-
 			}
 		}
-		else 
+		else
 			wait(&status);
 	}
 	return (0);
