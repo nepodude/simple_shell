@@ -14,6 +14,7 @@ int main(void)
 	char *lineOfCommand = NULL;
 	ssize_t read;
 	size_t n = 0;
+	extern char **environ;
 
 	while (1)
 	{
@@ -37,7 +38,7 @@ int main(void)
 		}
 		else if (child_pid == 0)
 		{
-			if (execve(args[0], args, NULL) == -1)
+			if (execve(args[0], args, environ) == -1)
 			{
 				printf("./shell: No such file or directory\n");
 				exit(EXIT_FAILURE);
@@ -46,5 +47,5 @@ int main(void)
 		else
 			wait(&status);
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
