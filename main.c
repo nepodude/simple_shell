@@ -1,51 +1,43 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/wait.h>
 #include "shell.h"
 
-/**
- * main - this will be used to get the command using getline, tokenize it using
- * tokenizer, fork in order to create a .
- * Return: 0 on sucess.
- */
+int main(){
 
-int main(void)
-{
-	char **args;
-	pid_t child_pid;
-	int status;
-	char *lineOfCommand = NULL;
-	ssize_t read;
-	size_t n = 0;
-	extern char **environ;
+	int char_read;
+	char *arguments[1024];
+	pid_t mypid;
+	long unsigned int *n = 0;
+	char *lineptr = NULL;
 
-	while (1)
-	{
-		printf("#cisfun$ ");
-		read = getline(&lineOfCommand, &n, stdin);
-		if (read == -1)
-		{
-			free(lineOfCommand);
-			perror("failed to read");
+	while (1){
+		printf("$");
+		char_read = getline(&lineptr, n, stdin);
+		if(char_read == -1){
+			perror("getline");
+			free(lineptr);
 			exit(EXIT_FAILURE);
 		}
-
-		lineOfCommand[strcspn(lineOfCommand, "\n")] = '\0';
-		args = tokenizer(lineOfCommand, " ");
-		child_pid = fork();
-
-		if (child_pid < 0)
-		{
-			perror("failed to fork");
-			exit(EXIT_FAILURE);
+		if(lineptr[char_read - 1] == '\n'){
+			lineptr[char_read - 1] = '\0';
 		}
-		else if (child_pid == 0)
-		{
-			if (execve(args[0], args, environ) == -1)
-			{
-				printf("./shell: No such file or directory\n");
+		arguments[0] = lineptr;
+		arguments[1] = NULL;
+
+		mypid = fork();
+		if(mypid == 0){
+			if(execve(arguments[0], arguments, NULL) == -1){
+				perror("execve");
 				exit(EXIT_FAILURE);
 			}
 		}
-		else
+		else if(mypid > 0){
+			int status;
 			wait(&status);
+		}
 	}
-	return (EXIT_SUCCESS);
+	free(lineptr);
+	return (0);
 }
