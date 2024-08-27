@@ -1,41 +1,43 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/wait.h>
 #include "shell.h"
 
-int main(){
+/**
+* main - runs the code from the stdin.
+* Return: 0 on sucess.
 
-	int char_read;
-	char *arguments[1024];
+*crete execve check if code belongs in $PATH
+ */
+
+int main(void)
+{
+	char *lineptr;
+	char *arguments[2];
 	pid_t mypid;
-	long unsigned int *n = 0;
-	char *lineptr = NULL;
 
-	while (1){
-		printf("$");
-		char_read = getline(&lineptr, n, stdin);
-		if(char_read == -1){
-			perror("getline");
-			free(lineptr);
-			exit(EXIT_FAILURE);
-		}
-		if(lineptr[char_read - 1] == '\n'){
-			lineptr[char_read - 1] = '\0';
-		}
-		arguments[0] = lineptr;
+	while (1)
+	{
+		printf("$ ");
+		lineptr = my_getline();
+ 		arguments[0] = lineptr;
 		arguments[1] = NULL;
 
 		mypid = fork();
-		if(mypid == 0){
-			if(execve(arguments[0], arguments, NULL) == -1){
-				perror("execve");
+		if (mypid == 0)
+		{
+			if (execvp(arguments[0], arguments) == -1)
+			{
+				perror("execvp");
 				exit(EXIT_FAILURE);
 			}
 		}
-		else if(mypid > 0){
-			int status;
-			wait(&status);
+		else if (mypid > 0)
+		{
+			my_wait();
+		}
+		else
+		{
+			perror("fork");
+			free(lineptr);
+			exit(EXIT_FAILURE);
 		}
 	}
 	free(lineptr);
