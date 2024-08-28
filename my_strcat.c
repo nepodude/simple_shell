@@ -1,13 +1,14 @@
 #include "shell.h"
 /**
- * _strcat - concatenating two  strings
- * @dest:char input
- * @src:char input
- * Return:char out of the function
- */
+* _strcat - concatenating two  strings
+* @dest:char input
+* @src:char input
+* Return:char out of the function
+*/
 char *_strcat(char *dest, char *src)
 {
 char *s = dest;
+
 while (*dest)
 {
 dest++;

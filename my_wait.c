@@ -1,18 +1,19 @@
 #include "shell.h"
 
 /**
- * mywait - performs the wait action.
- * Return: nothing
-  */
+* _wait - performs the wait action.
+* Return: nothing
+*/
 
-void _wait()
+void _wait(void)
 {
-    int status;
-    pid_t mypid = wait(&status);
+	int status;
 
-    if(mypid == -1)
-    {
-        perror("wait");
-        exit(EXIT_FAILURE);
-    }
+	pid_t mypid = wait(&status);
+
+	if (mypid == -1)
+	{
+		perror("wait");
+		exit(EXIT_FAILURE);
+	}
 }

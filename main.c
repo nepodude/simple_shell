@@ -2,22 +2,25 @@
 
 /**
 * main - runs the code from the stdin.
+* @argc: number of passed arguments
+* @argv: an array of argument strings;
+* @envp: the current environment to play with haha
 * Return: 0 on sucess.
-
 *crete execve check if code belongs in $PATH
  */
 
-int main(__attribute__((unused)) int argc, __attribute__((unused)) char *argv[], char *envp[])
+int main(__attribute__((unused)) int argc,
+__attribute__((unused)) char *argv[], char *envp[])
 {
 	char *lineptr;
 	char *arguments[2];
 	pid_t mypid;
 
 	while (1)
-	{	
+	{
 		printf("$");
 		lineptr = _getline();
- 		arguments[0] = lineptr;
+		arguments[0] = lineptr;
 		arguments[1] = NULL;
 
 		mypid = fork();
