@@ -1,6 +1,6 @@
 #include "shell.h"
 
-char *my_getline(){
+char *_getline(){
     
 	unsigned long int n = 0;
 	char *lineptr = NULL;

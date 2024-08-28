@@ -5,7 +5,7 @@
  * Return: nothing
   */
 
-void my_wait()
+void _wait()
 {
     int status;
     pid_t mypid = wait(&status);

@@ -5,7 +5,7 @@
  * Return: current pointer.
   */
 
-char *my_strtok(char *str, const char *delim)
+char *_strtok(char *str, const char *delim)
 {   
     static char *saved_str;
     char *start;

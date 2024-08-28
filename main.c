@@ -7,31 +7,31 @@
 *crete execve check if code belongs in $PATH
  */
 
-int main(void)
+int main(__attribute__((unused)) int argc, __attribute__((unused)) char *argv[], char *envp[])
 {
 	char *lineptr;
 	char *arguments[2];
 	pid_t mypid;
 
 	while (1)
-	{
-		printf("$ ");
-		lineptr = my_getline();
+	{	
+		printf("$");
+		lineptr = _getline();
  		arguments[0] = lineptr;
 		arguments[1] = NULL;
 
 		mypid = fork();
 		if (mypid == 0)
 		{
-			if (execvp(arguments[0], arguments) == -1)
+			if (_execve(arguments[0], arguments, envp) == -1)
 			{
-				perror("execvp");
+				perror("execve");
 				exit(EXIT_FAILURE);
 			}
 		}
 		else if (mypid > 0)
 		{
-			my_wait();
+			_wait();
 		}
 		else
 		{
