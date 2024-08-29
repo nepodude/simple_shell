@@ -2,15 +2,14 @@
 /**
 * _execve - Just executes codes hahaha
 * @filename: the name of code/file we execute.
-* @arg: the arguments passed.
-* @envp: enviroment passed to main then to execve.
-* Return: int 0 on success and -1 otherwise.
+* @arg: the arguments passed to the executables.
+* @envp: enviroment variables pass to execve.
+* Return: int 0 on success and -1 on failure.
  */
 int _execve(const char *filename, char *const arg[], char *const envp[])
 {
 	char *dir, *path = NULL;
-	int exec_status;
-	int i = 0;
+	int exec_status, i = 0;
 
 	for (; envp[i] != NULL; i++)
 	{
@@ -30,7 +29,7 @@ int _execve(const char *filename, char *const arg[], char *const envp[])
 	exec_status = execve(filename, arg, envp);
 	if (exec_status == -1)
 	{
-		perror("exeve");
+		perror("execve");
 		return (-1);
 	}
 	}
@@ -51,12 +50,12 @@ int _execve(const char *filename, char *const arg[], char *const envp[])
 }
 
 /**
-* codename_maker - helps execve that's all.
-* @dir: helper
-* @filename: helper
-* @arg: helper.
-* @envp: helper.
-* Return: -1 on failure and 0 on success.
+ * codename_maker - Concatenates directory and filename ,executes the command
+ * @dir: Directory name
+ * @filename: File name to execute
+ * @arg: Arguments to pass to execve
+ * @envp: Environment variables to pass to execve
+ * Return: 0 on success, -1 on failure
  */
 
 int codename_maker(char *dir, char *filename,
@@ -69,6 +68,7 @@ char *const arg[], char *const envp[])
 	if (full_path == NULL)
 	{
 		perror("malloc");
+		free(full_path);
 		return (-1);
 	}
 	_strcpy(full_path, dir);

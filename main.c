@@ -20,9 +20,13 @@ __attribute__((unused)) char *argv[], char *envp[])
 	{
 		printf("$");
 		lineptr = _getline();
+		if (lineptr == NULL)
+		{
+			printf("\n");
+			break;
+		}
 		arguments[0] = lineptr;
 		arguments[1] = NULL;
-
 		mypid = fork();
 		if (mypid == 0)
 		{
