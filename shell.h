@@ -12,6 +12,9 @@
 #include <fcntl.h>
 #include <errno.h>
 
+
+#define MAX_ARGS 100
+
 char *_getline();
 void _wait(void);
 int _execve(const char *filename, char *const arg[], char *const envp[]);
@@ -28,5 +31,7 @@ int _printf_err(char *chars);
 char *trim_spaces(char *lineptr);
 int _isspace(char c);
 char *_strdup(char *str);
+char **parse_input(char *input);
+void free_args(char **args);
 
 #endif

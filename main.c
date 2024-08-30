@@ -13,7 +13,7 @@ int main(__attribute__((unused)) int argc,
 __attribute__((unused)) char *argv[], char *envp[])
 {
 	char *lineptr;
-	char *arguments[2];
+	char **arguments;
 	pid_t mypid;
 
 	while (1)
@@ -28,8 +28,13 @@ __attribute__((unused)) char *argv[], char *envp[])
 			free(lineptr);
 			continue;
 		}
-		arguments[0] = lineptr;
-		arguments[1] = NULL;
+		arguments = parse_input(lineptr);
+		if (arguments == NULL || arguments[0] == NULL)
+		{
+			free(lineptr);
+			free_args(arguments);
+			continue;
+		}
 		mypid = fork();
 		if (mypid == 0)
 		{
@@ -37,6 +42,7 @@ __attribute__((unused)) char *argv[], char *envp[])
 			{
 				perror("execve");
 				free(lineptr);
+				free_args(arguments);
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -48,11 +54,48 @@ __attribute__((unused)) char *argv[], char *envp[])
 		{
 			perror("fork");
 			free(lineptr);
+			free_args(arguments);
 			exit(EXIT_FAILURE);
 		}
 		free(lineptr);
 		lineptr = NULL;
+		free_args(arguments);
 	}
 
 	return (0);
+}
+
+/**
+ */
+
+char **parse_input(char *input)
+{
+	char **args = malloc(MAX_ARGS * sizeof(char *));
+	char *token;
+	int i = 0;
+
+	if (!args)
+	{
+		perror("malloc");
+		return (NULL);
+	}
+	token = _strtok(input, " \t\n");
+	while(token != NULL && i < MAX_ARGS -1)
+	{
+		args[i++] = token;
+		token = _strtok(NULL, " \t\n");
+	}
+	args[i] = NULL;
+
+	return(args);
+}
+
+/**
+ */
+void free_args(char **args)
+{
+	if(args)
+	{
+		free(args);
+	}
 }
