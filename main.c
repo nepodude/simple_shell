@@ -18,7 +18,6 @@ __attribute__((unused)) char *argv[], char *envp[])
 
 	while (1)
 	{
-		_printf("$ ");
 		lineptr = _getline();
 		if (lineptr == NULL || feof(stdin))
 		{

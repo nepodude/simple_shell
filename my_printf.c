@@ -12,7 +12,7 @@ int _printf(char *chars)
 
 	while (*chars != '\0')
 	{
-		result = write(1, chars, 1);
+		result = write(STDERR_FILENO, chars, 1);
 		if (result == -1)
 		{
 			return (-1);
