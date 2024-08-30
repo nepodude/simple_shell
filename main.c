@@ -19,10 +19,14 @@ __attribute__((unused)) char *argv[], char *envp[])
 	while (1)
 	{
 		lineptr = _getline();
-		if (lineptr == NULL || feof(stdin))
+		if (feof(stdin))
+		{
+			exit(EXIT_SUCCESS);
+		}
+		if (lineptr == NULL)
 		{
 			free(lineptr);
-			exit(EXIT_SUCCESS);
+			continue;
 		}
 		arguments[0] = lineptr;
 		arguments[1] = NULL;
@@ -49,6 +53,6 @@ __attribute__((unused)) char *argv[], char *envp[])
 		free(lineptr);
 		lineptr = NULL;
 	}
-	free(lineptr);
+
 	return (0);
 }

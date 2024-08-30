@@ -25,5 +25,8 @@ int codename_maker(char *dir, char *filename,
 char *const arg[], char *const envp[]);
 int _printf(char *chars);
 int _printf_err(char *chars);
+char *trim_spaces(char *lineptr);
+int _isspace(char c);
+char *_strdup(char *str);
 
 #endif
