@@ -18,12 +18,12 @@ __attribute__((unused)) char *argv[], char *envp[])
 
 	while (1)
 	{
-		printf("$");
+		_printf("$ ");
 		lineptr = _getline();
-		if (lineptr == NULL)
+		if (lineptr == NULL || feof(stdin))
 		{
-			printf("\n");
-			break;
+			free(lineptr);
+			exit(EXIT_SUCCESS);
 		}
 		arguments[0] = lineptr;
 		arguments[1] = NULL;
@@ -33,6 +33,7 @@ __attribute__((unused)) char *argv[], char *envp[])
 			if (_execve(arguments[0], arguments, envp) == -1)
 			{
 				perror("execve");
+				free(lineptr);
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -46,6 +47,8 @@ __attribute__((unused)) char *argv[], char *envp[])
 			free(lineptr);
 			exit(EXIT_FAILURE);
 		}
+		free(lineptr);
+		lineptr = NULL;
 	}
 	free(lineptr);
 	return (0);

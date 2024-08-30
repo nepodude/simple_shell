@@ -23,5 +23,7 @@ char *_strcat(char *dest, char *src);
 char *_strcpy(char *dest, char *src);
 int codename_maker(char *dir, char *filename,
 char *const arg[], char *const envp[]);
+int _printf(char *chars);
+int _printf_err(char *chars);
 
 #endif

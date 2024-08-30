@@ -21,7 +21,7 @@ int _execve(const char *filename, char *const arg[], char *const envp[])
 	}
 	if (path == NULL)
 	{
-		fprintf(stderr, "PATH environment variable not found\n");
+		_printf_err("PATH environment variable not found\n");
 		return (-1);
 	}
 	if (_strchr((char *)filename, '/') != NULL)
@@ -36,16 +36,13 @@ int _execve(const char *filename, char *const arg[], char *const envp[])
 	dir = _strtok(path, ":");
 	for (; dir != NULL; dir = _strtok(NULL, ":"))
 	{
-		if (codename_maker(dir, (char *)filename, arg, envp) == -1)
-		{
-			return (-1);
-		}
-		else
+		if (codename_maker(dir, (char *)filename, arg, envp) == 0)
 		{
 			return (0);
 		}
 	}
-	fprintf(stderr, "%s: command not found\n", filename);
+	_printf_err((char *)filename);
+	_printf_err(": command not found\n");
 	return (-1);
 }
 
@@ -64,11 +61,10 @@ char *const arg[], char *const envp[])
 	char *full_path;
 	int exec_status;
 
-	full_path = malloc(_strlen(dir) + strlen(filename) + 2);
+	full_path = malloc(_strlen(dir) + _strlen(filename) + 2);
 	if (full_path == NULL)
 	{
 		perror("malloc");
-		free(full_path);
 		return (-1);
 	}
 	_strcpy(full_path, dir);
