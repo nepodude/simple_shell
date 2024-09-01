@@ -33,5 +33,7 @@ int _isspace(char c);
 char *_strdup(char *str);
 char **parse_input(char *input);
 void free_args(char **args);
+char **get_inputs(char **lineptr);
+void handle_child_process(char **arguments, char *envp[], char *lineptr);
 
 #endif

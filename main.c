@@ -18,37 +18,22 @@ __attribute__((unused)) char *argv[], char *envp[])
 
 	while (1)
 	{
-		lineptr = _getline();
-		if (feof(stdin))
+		arguments = get_inputs(&lineptr);
+		if (arguments == NULL)
 		{
-			exit(EXIT_SUCCESS);
-		}
-		if (lineptr == NULL)
-		{
-			free(lineptr);
-			continue;
-		}
-		arguments = parse_input(lineptr);
-		if (arguments == NULL || arguments[0] == NULL)
-		{
-			free(lineptr);
-			free_args(arguments);
 			continue;
 		}
 		mypid = fork();
 		if (mypid == 0)
 		{
-			if (_execve(arguments[0], arguments, envp) == -1)
-			{
-				perror("execve");
-				free(lineptr);
-				free_args(arguments);
-				exit(EXIT_FAILURE);
-			}
+			handle_child_process(arguments, envp, lineptr);
 		}
 		else if (mypid > 0)
 		{
 			_wait();
+			free(lineptr);
+			lineptr = NULL;
+			free_args(arguments);
 		}
 		else
 		{
@@ -57,15 +42,14 @@ __attribute__((unused)) char *argv[], char *envp[])
 			free_args(arguments);
 			exit(EXIT_FAILURE);
 		}
-		free(lineptr);
-		lineptr = NULL;
-		free_args(arguments);
 	}
-
 	return (0);
 }
 
 /**
+* parse_input - parses input string.
+* @input: input string to parse.
+* Return: resulting array of parsed strings.
  */
 
 char **parse_input(char *input)
@@ -80,22 +64,74 @@ char **parse_input(char *input)
 		return (NULL);
 	}
 	token = _strtok(input, " \t\n");
-	while(token != NULL && i < MAX_ARGS -1)
+	while (token != NULL && i < MAX_ARGS - 1)
 	{
 		args[i++] = token;
 		token = _strtok(NULL, " \t\n");
 	}
 	args[i] = NULL;
 
-	return(args);
+	return (args);
 }
 
 /**
+* free_args - frees allocated memory.
+* @args: something to free.
+* Return: nothing.
  */
 void free_args(char **args)
 {
-	if(args)
+	if (args)
 	{
 		free(args);
+	}
+}
+
+/**
+* get_inputs - gets inputs and deals with them.
+* @lineptr: line pointer
+* Return: pointer to pointers which are arguments.
+ */
+
+char **get_inputs(char **lineptr)
+{
+	char **arguments;
+
+	*lineptr = _getline();
+	if (feof(stdin))
+	{
+		exit(EXIT_SUCCESS);
+	}
+	if (*lineptr == NULL)
+	{
+		free(*lineptr);
+		return (NULL);
+	}
+	arguments = parse_input(*lineptr);
+	if (arguments == NULL || arguments[0] == NULL)
+	{
+		free(*lineptr);
+		free_args(arguments);
+		return (NULL);
+	}
+	return (arguments);
+}
+
+/**
+* handle_child_process - handles childs process
+* @envp: environment.
+* @lineptr: line pointer
+* @arguments: arguments
+* Return: nothing.
+ */
+
+void handle_child_process(char **arguments, char *envp[], char *lineptr)
+{
+	if (_execve(arguments[0], arguments, envp) == -1)
+	{
+		perror("execve");
+		free(lineptr);
+		free_args(arguments);
+		exit(EXIT_FAILURE);
 	}
 }
