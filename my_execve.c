@@ -29,7 +29,7 @@ int _execve(const char *filename, char *const arg[], char *const envp[])
 	exec_status = execve(filename, arg, envp);
 	if (exec_status == -1)
 	{
-		perror("execve");
+		_printf_err("execve");
 		return (-1);
 	}
 	}
@@ -42,7 +42,7 @@ int _execve(const char *filename, char *const arg[], char *const envp[])
 		}
 	}
 	_printf_err((char *)filename);
-	_printf_err(": command not found\n");
+	_printf_err(": not found\n");
 	return (-1);
 }
 
@@ -76,6 +76,10 @@ char *const arg[], char *const envp[])
 	if (exec_status != -1)
 	{
 		return (0);
+	}
+	if (errno == EACCES)
+	{
+		return (-1);
 	}
 	else if (errno != ENOENT)
 	{
